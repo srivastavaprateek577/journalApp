@@ -25,14 +25,14 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/journal/**")
+                .antMatchers("/journal/**","/user/**")
                 .authenticated()
                 .anyRequest()
                 .permitAll()
                 .and()
                 .httpBasic();
 
-        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
     }
 
 
