@@ -16,23 +16,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> allUsers = userService.getAll();
-        if (allUsers != null && !allUsers.isEmpty()) {
-            return new ResponseEntity<>(allUsers, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        try {
-            userService.saveUser(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public void createUser(@RequestBody User user) {
+
+            userService.saveEntry(user);
+
     }
 
     @PutMapping
@@ -40,7 +29,7 @@ public class UserController {
         User userInDb = userService.findByUsername(user.getUsername());
         if (userInDb != null) {
             userInDb.setPassword(user.getPassword());
-            userService.saveUser(userInDb);
+            userService.saveEntry(userInDb);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

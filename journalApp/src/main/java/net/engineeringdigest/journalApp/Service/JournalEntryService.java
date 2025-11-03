@@ -29,7 +29,7 @@ public class JournalEntryService {
             journalEntry.setUser(user);
             journalEntryRepository.save(journalEntry);
             user.getJournalEntries().add(journalEntry);
-            userService.saveUser(user);
+            userService.saveEntry(user);
         }
        } catch (Exception e) {
            throw new RuntimeException(e);
@@ -47,7 +47,7 @@ public class JournalEntryService {
     public void deleteById(Long id,String userName) {
         User user = userService.findByUsername(userName);
         user.getJournalEntries().removeIf(x-> x.getId().equals(id));
-        userService.saveUser(user);
+        userService.saveEntry(user);
         journalEntryRepository.deleteById(id);
 
     }

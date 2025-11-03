@@ -28,4 +28,6 @@ public class User {
     @JsonIgnoreProperties({"title", "content", "date", "user"})
     @JsonManagedReference
     private List<JournalEntry> journalEntries = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 }
