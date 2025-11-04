@@ -7,6 +7,8 @@ import net.engineeringdigest.journalApp.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,10 @@ public class JournalEntryControllerV2 {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getAllJournalEntriesOfUser(@PathVariable String username) {
+    @GetMapping
+    public ResponseEntity<?> getAllJournalEntriesOfUser() {
+        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         User user = userService.findByUsername(username);
         if (user == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -34,15 +38,19 @@ public class JournalEntryControllerV2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/{username}")
-    public ResponseEntity<Void> createEntry(@PathVariable String username, @RequestBody JournalEntry entry) {
+    @PostMapping
+    public ResponseEntity<Void> createEntry(@RequestBody JournalEntry entry) {
+        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         journalEntryService.saveEntry(entry, username);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<JournalEntry> getJournalEntry(@PathVariable Long id) {
-        Optional<JournalEntry> journalEntry = journalEntryService.findById(id);
+        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+       Optional<JournalEntry> journalEntry = journalEntryService.findById(id);
         return journalEntry.map(entry -> new ResponseEntity<>(entry, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
