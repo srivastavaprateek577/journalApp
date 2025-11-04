@@ -27,6 +27,7 @@ public class SpringSecurity {
                 .authorizeRequests()
                 .antMatchers("/public/**").permitAll()        // ✅ public endpoints
                 .antMatchers("/user/**", "/journal/**").authenticated()  // ✅ protected
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic()

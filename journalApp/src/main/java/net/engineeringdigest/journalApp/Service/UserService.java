@@ -29,6 +29,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void saveAdmin(User user) {
+         if (!user.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        user.setRoles(new ArrayList<>(Arrays.asList("USER","ADMIN")));
+        userRepository.save(user);
+    }
+
     public void saveUser(User user) {
         userRepository.save(user);
     }
