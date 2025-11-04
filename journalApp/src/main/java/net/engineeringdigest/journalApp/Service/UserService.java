@@ -18,16 +18,18 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private static  final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void saveEntry(User user) {
-    user.setPassword( passwordEncoder.encode(user.getPassword()));
+    public void saveNewEntry(User user) {
+        // ✅ Encode only if password is not already encoded
+        if (!user.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         user.setRoles(new ArrayList<>(Arrays.asList("USER")));
-
-    userRepository.save(user);
+        userRepository.save(user);
     }
 
-    public void saveNewUser(User user ){
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 
