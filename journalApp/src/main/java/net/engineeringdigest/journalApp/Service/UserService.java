@@ -1,7 +1,10 @@
 package net.engineeringdigest.journalApp.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.engineeringdigest.journalApp.Repository.UserRepository;
 import net.engineeringdigest.journalApp.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class UserService {
 
@@ -20,13 +23,20 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void saveNewEntry(User user) {
+    public boolean saveNewEntry(User user) {
         // ✅ Encode only if password is not already encoded
-        if (!user.getPassword().startsWith("$2a$")) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        try {
+            if (!user.getPassword().startsWith("$2a$")) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            user.setRoles(new ArrayList<>(Arrays.asList("USER")));
+            userRepository.save(user);
+
+            return true;
+        } catch (Exception e) {
+            log.error("error occurred",e);
+            return false;
         }
-        user.setRoles(new ArrayList<>(Arrays.asList("USER")));
-        userRepository.save(user);
     }
 
     public void saveAdmin(User user) {

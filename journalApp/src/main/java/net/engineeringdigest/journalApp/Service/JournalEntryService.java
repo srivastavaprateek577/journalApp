@@ -3,6 +3,8 @@ package net.engineeringdigest.journalApp.Service;
 import net.engineeringdigest.journalApp.Repository.JournalEntryRepository;
 import net.engineeringdigest.journalApp.entity.JournalEntry;
 import net.engineeringdigest.journalApp.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
+
+
     @Transactional
     public void saveEntry(JournalEntry journalEntry, String username) {
        try {
@@ -32,6 +36,7 @@ public class JournalEntryService {
             userService.saveUser(user);
         }
        } catch (Exception e) {
+
            throw new RuntimeException(e);
        }
     }
