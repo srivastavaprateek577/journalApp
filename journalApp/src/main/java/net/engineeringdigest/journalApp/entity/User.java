@@ -20,6 +20,12 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, columnDefinition="varchar(255) default ''")
+    private String email;
+
+    @Column(nullable = false, columnDefinition="boolean default false")
+    private Boolean sentimentAnalysis = false;
+
     @Column(nullable = false)
     private String password;
 
